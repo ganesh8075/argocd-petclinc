@@ -67,6 +67,8 @@ Before starting the project, the following tools and environment must be availab
 ```bash id="h0l5k2"
 kubectl get nodes
 
+```
+
 4. Installing Argo CD
 
 First, create a dedicated namespace for Argo CD.
@@ -79,18 +81,22 @@ kubectl config set-context --current --namespace=argocd
 This ensures all commands run inside the argocd namespace.
 
 Install Argo CD using official manifests
+```
 kubectl apply -n argocd \
 -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
+```
 This command deploys all Argo CD components into the Kubernetes cluster.
 
 5. Verify Argo CD Installation
 
 Check the running pods:
+```
 
 kubectl get pods -n argocd
+```
 
 Example output:
+```
 
 argocd-server
 
@@ -101,6 +107,7 @@ argocd-application-controller
 argocd-dex-server
 
 argocd-redis
+```
 
 These components handle:
 
@@ -116,10 +123,14 @@ application management
 
 Argo CD provides a web-based dashboard to manage applications.
 
-Check service
+Check service:
+```
 kubectl get svc argocd-server -n argocd
-Use port forwarding
+```
+Use port forwarding:
+```
 kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
 
 Now open the browser:
 
@@ -131,25 +142,32 @@ Username:
 admin
 
 Retrieve password:
+```
 
 kubectl get secrets argocd-initial-admin-secret \
 -n argocd -o jsonpath="{.data.password}" | base64 -d
+```
 7. GitHub Repository Setup
 
 Create a GitHub repository that contains Kubernetes manifests.
 
 Example repositories used in the project:
+```
 
 https://github.com/ganesh8075/argocd-eapp
 
 https://github.com/ganesh8075/argocd-petclinc
+```
 
-Example repository structure
+Example repository structure:
+```
 application-repo
 │
 ├── deployment.yaml
 └── service.yaml
-Example Deployment YAML
+```
+Deployment YAML
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -169,7 +187,10 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
-Example Service YAML
+```
+
+Service YAML
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -182,6 +203,7 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
+```
 8. Creating Application in Argo CD
 
 Inside the Argo CD UI, create a new application.
@@ -190,7 +212,7 @@ Application Configuration
 Parameter	Value
 Application Name	ecommapp
 Project	default
-Repository URL	GitHub repository
+Repository URL: GitHub repository
 Path	.
 Cluster	Kubernetes default cluster
 Namespace	default
@@ -235,27 +257,32 @@ Argo CD deploys update to Kubernetes
 10. Verifying Deployment
 
 Check Kubernetes resources:
+```
 
 kubectl get deployments
 kubectl get pods
 kubectl get svc
-
+```
 Once pods are running, the application is successfully deployed.
 
 11. Advantages of GitOps with Argo CD
-1. Automated Deployments
+ 1. Automated Deployments
 
 Applications deploy automatically when Git changes.
 
-2. Version Control
+ 2. Version Control
 
 All deployment configurations are stored in Git.
 
-3. Easy Rollback
+ 3. Easy Rollback
 
-If deployment fails:
+ If deployment fails:
+ 
+```
 
-git revert
+ git revert
+
+```
 
 Argo CD automatically restores the previous version.
 
@@ -269,4 +296,4 @@ synchronization status
 
 deployment history
 
-12. Key DevOps Concepts Used
+
