@@ -167,53 +167,47 @@ application-repo
 └── service.yaml
 ```
 Deployment YAML
+
 ```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ecomm
+  name: spring-deployment
 spec:
-  replicas: 2
+  replicas: 7
   selector:
     matchLabels:
-      app: ecomm
+      app: spring
   template:
     metadata:
       labels:
-        app: ecomm
+        app: spring
     spec:
       containers:
-      - name: ecomm
-        image: nginx
+      - name: petclinic
+        image: 636706114596.dkr.ecr.ap-south-1.amazonaws.com/petclinic-monitoring:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 ```
 
 Service YAML
+
 ```
 apiVersion: v1
 kind: Service
 metadata:
-  name: ecomm-service
+  name: spring-service
+  labels:
+    app: spring          
 spec:
+  type: LoadBalancer
   selector:
-    app: ecomm
+    app: spring          
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: ClusterIP
+  - name: http           
+    port: 80
+    targetPort: 8080
 ```
-8. Creating Application in Argo CD
-
-Inside the Argo CD UI, create a new application.
-
-Application Configuration
-Parameter	Value
-Application Name	ecommapp
-Project	default
-Repository URL: GitHub repository
-Path	.
 Cluster	Kubernetes default cluster
 Namespace	default
 What this configuration means
